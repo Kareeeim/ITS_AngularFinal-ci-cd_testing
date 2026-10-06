@@ -33,7 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         # Angular 21 richiede Node ^20.19.0 || ^22.12.0 || >=24.0.0.
-        node-version: [24.x, 26.x]
+        node-version: [20.x, 21.x, 24.x]
 
     steps:
       - name: Checkout repository
