@@ -1,0 +1,30 @@
+<nav class="barra-alta">
+  <a class="marchio" [routerLink]="['/canvas']">
+    <span class="glifo">◤</span>
+    PacketTracer<span class="marchio-accento">2077</span>
+  </a>
+
+  <ul class="voci">
+    <li>
+      <a class="voce" [routerLink]="['/canvas']" routerLinkActive="attiva">Canvas</a>
+    </li>
+  </ul>
+
+  <span class="sottotitolo">Gestione visuale di una rete informatica</span>
+
+  <span class="stato">
+    <span class="spia"></span>
+    Running
+  </span>
+</nav>
+
+<router-outlet></router-outlet>
+
+@if (service.messaggio()) {
+  <div class="avviso" role="alert">
+    <span class="spia"></span>
+    {{ service.messaggio() }}
+  </div>
+}
+
+<app-conferma />

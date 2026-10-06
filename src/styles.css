@@ -1,0 +1,433 @@
+/*
+ * ReteCanvas — stili globali.
+ *
+ * Il tema è ispirato all'interfaccia di Cyberpunk 2077: fondo quasi nero,
+ * accenti neon giallo/ciano/magenta, pannelli con gli angoli tagliati,
+ * tipografia tecnica maiuscola, scanline e bagliori al neon.
+ *
+ * In questo file vivono i token del tema (variabili CSS) e gli elementi di
+ * interfaccia riutilizzati da più componenti: pulsanti, campi di modulo,
+ * badge e intestazioni di sezione.
+ */
+
+:root {
+  /* Accenti neon */
+  --cp-giallo: #fcee0a;
+  --cp-ciano: #00f0ff;
+  --cp-magenta: #ff2e6a;
+  --cp-verde: #39ff88;
+  --cp-arancio: #ffa62b;
+  --cp-rosso: #ff2e48;
+
+  /* Superfici scure */
+  --cp-nero: #04050a;
+  --cp-fondo: #080a11;
+  --cp-pannello: #0d1119;
+  --cp-pannello-alto: #141b26;
+
+  /* Bordi e testo */
+  --cp-bordo: rgba(0, 240, 255, 0.22);
+  --cp-bordo-forte: rgba(0, 240, 255, 0.5);
+  --cp-bordo-tenue: rgba(0, 240, 255, 0.12);
+  --cp-testo: #d3e6ef;
+  --cp-testo-debole: #6d8494;
+
+  /* Tipografia */
+  --cp-font: 'Chakra Petch', 'Segoe UI', system-ui, sans-serif;
+  --cp-mono: 'Share Tech Mono', 'Consolas', 'Courier New', monospace;
+
+  /* Smusso degli angoli tagliati */
+  --cp-taglio: 9px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--cp-font);
+  color: var(--cp-testo);
+  background-color: var(--cp-nero);
+  background-image:
+    radial-gradient(ellipse at 12% 0%, rgba(0, 240, 255, 0.1), transparent 55%),
+    radial-gradient(ellipse at 88% 100%, rgba(252, 238, 10, 0.07), transparent 55%);
+  background-attachment: fixed;
+}
+
+/* Scanline da tubo catodico: sovrapposizione non interattiva su tutta l'app */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0,
+    rgba(0, 0, 0, 0.3) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.35;
+}
+
+::selection {
+  color: var(--cp-nero);
+  background: var(--cp-giallo);
+}
+
+/* Barre di scorrimento in tema */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 240, 255, 0.35) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.3);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.55);
+  background-clip: padding-box;
+}
+
+/*
+ * Colori associati alle tipologie di dispositivo.
+ * Ogni classe espone la variabile --colore-tipo, usata dai componenti
+ * per colorare bordi, icone e badge in modo coerente.
+ */
+.tipo-pc {
+  --colore-tipo: var(--cp-ciano);
+  color: var(--cp-ciano);
+}
+
+.tipo-switch {
+  --colore-tipo: var(--cp-giallo);
+  color: var(--cp-giallo);
+}
+
+.tipo-router {
+  --colore-tipo: var(--cp-magenta);
+  color: var(--cp-magenta);
+}
+
+/*
+ * Dimensione delle icone: si adatta al contesto tramite la variabile
+ * --dimensione-icona, che viene ereditata dai contenitori.
+ */
+.icona-dispositivo {
+  width: var(--dimensione-icona, 24px);
+  height: var(--dimensione-icona, 24px);
+  flex: 0 0 auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Pulsanti
+   --------------------------------------------------------------------------- */
+
+/*
+ * Pulsante con gli angoli tagliati e il bordo neon. Il bordo è disegnato con
+ * due sfondi sovrapposti (riempimento su padding-box, accento su border-box)
+ * perché il ritaglio degli angoli annullerebbe un normale border.
+ */
+.cp-btn {
+  --accento: var(--cp-ciano);
+  --riempimento: #0e141d;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: var(--cp-font);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accento);
+  cursor: pointer;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--riempimento), var(--riempimento)) padding-box,
+    linear-gradient(
+        135deg,
+        var(--accento),
+        color-mix(in srgb, var(--accento) 25%, transparent)
+      )
+      border-box;
+  clip-path: polygon(
+    var(--cp-taglio) 0,
+    100% 0,
+    100% calc(100% - var(--cp-taglio)),
+    calc(100% - var(--cp-taglio)) 100%,
+    0 100%,
+    0 var(--cp-taglio)
+  );
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    filter 0.15s ease;
+}
+
+.cp-btn:hover {
+  --riempimento: #18232f;
+
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accento) 55%, transparent));
+}
+
+.cp-btn:active {
+  transform: translateY(1px);
+}
+
+.cp-btn:focus-visible {
+  outline: 2px solid var(--cp-giallo);
+  outline-offset: 2px;
+}
+
+/* Stato attivo o azione principale: riempimento pieno in tinta */
+.cp-btn.attivo,
+.cp-btn.pieno {
+  --riempimento: var(--accento);
+
+  font-weight: 700;
+  color: var(--cp-nero);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accento) 60%, transparent));
+}
+
+.cp-btn.attivo:hover,
+.cp-btn.pieno:hover {
+  --riempimento: color-mix(in srgb, var(--accento) 82%, #ffffff);
+}
+
+.cp-btn.successo {
+  --accento: var(--cp-verde);
+}
+
+.cp-btn.pericolo {
+  --accento: var(--cp-rosso);
+}
+
+.cp-btn.avviso {
+  --accento: var(--cp-arancio);
+}
+
+.cp-btn.neutro {
+  --accento: #8fa6b8;
+}
+
+/* ---------------------------------------------------------------------------
+   Campi di modulo
+   --------------------------------------------------------------------------- */
+
+.cp-campo {
+  width: 100%;
+  padding: 6px 10px;
+  font-family: var(--cp-mono);
+  font-size: 13px;
+  color: var(--cp-ciano);
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid var(--cp-bordo);
+  border-radius: 0;
+  outline: none;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%
+  );
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.cp-campo:hover {
+  border-color: var(--cp-bordo-forte);
+}
+
+.cp-campo:focus {
+  color: var(--cp-giallo);
+  background: rgba(252, 238, 10, 0.07);
+  border-color: var(--cp-giallo);
+}
+
+.cp-campo:disabled {
+  color: var(--cp-testo-debole);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  cursor: not-allowed;
+}
+
+select.cp-campo {
+  padding-right: 26px;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-repeat: no-repeat;
+  background-position:
+    right 13px top 55%,
+    right 8px top 55%;
+  background-size:
+    5px 5px,
+    5px 5px;
+}
+
+select.cp-campo option {
+  color: var(--cp-testo);
+  background: var(--cp-pannello);
+}
+
+/* ---------------------------------------------------------------------------
+   Etichette, badge e intestazioni di sezione
+   --------------------------------------------------------------------------- */
+
+.cp-etichetta {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cp-testo-debole);
+}
+
+/* Piccola targhetta in tinta, usata per tipo e stato dei dispositivi */
+.cp-badge {
+  --accento: var(--cp-ciano);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-family: var(--cp-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accento);
+  background: color-mix(in srgb, var(--accento) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accento) 45%, transparent);
+  clip-path: polygon(
+    5px 0,
+    100% 0,
+    100% calc(100% - 5px),
+    calc(100% - 5px) 100%,
+    0 100%,
+    0 5px
+  );
+}
+
+.cp-badge.online {
+  --accento: var(--cp-verde);
+}
+
+.cp-badge.offline {
+  --accento: var(--cp-rosso);
+}
+
+.cp-badge.manutenzione {
+  --accento: var(--cp-arancio);
+}
+
+.cp-badge.tipo {
+  --accento: var(--colore-tipo, var(--cp-ciano));
+}
+
+/*
+ * Intestazione di sezione: piccola tacca gialla seguita dal titolo maiuscolo.
+ */
+.cp-sezione {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cp-giallo);
+}
+
+.cp-sezione::before {
+  content: '';
+  width: 3px;
+  height: 13px;
+  background: var(--cp-giallo);
+  box-shadow: 0 0 8px var(--cp-giallo);
+}
+
+.cp-sezione:first-child {
+  margin-top: 0;
+}
+
+.cp-sezione .cp-badge {
+  margin-left: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Animazioni condivise
+   --------------------------------------------------------------------------- */
+
+@keyframes cp-sfarfallio {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  94% {
+    opacity: 0.55;
+  }
+  96% {
+    opacity: 1;
+  }
+}
+
+@keyframes cp-glitch {
+  0%,
+  88%,
+  100% {
+    text-shadow: none;
+    transform: translateX(0);
+  }
+  90% {
+    text-shadow:
+      -2px 0 var(--cp-magenta),
+      2px 0 var(--cp-ciano);
+    transform: translateX(-1px);
+  }
+  94% {
+    text-shadow:
+      2px 0 var(--cp-magenta),
+      -2px 0 var(--cp-ciano);
+    transform: translateX(1px);
+  }
+}
+
+/* Rispetta chi ha chiesto meno animazioni nel sistema operativo */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

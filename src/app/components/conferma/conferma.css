@@ -1,0 +1,114 @@
+.velo {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(2, 3, 7, 0.78);
+  backdrop-filter: blur(3px);
+  animation: comparsa 0.15s ease-out;
+}
+
+.finestra {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 20px 22px 18px;
+  background:
+    linear-gradient(var(--cp-pannello), var(--cp-pannello)) padding-box,
+    linear-gradient(135deg, var(--cp-rosso), color-mix(in srgb, var(--cp-rosso) 20%, transparent))
+      border-box;
+  border: 1px solid transparent;
+  box-shadow:
+    0 0 0 1px rgba(255, 46, 72, 0.15),
+    0 0 40px rgba(255, 46, 72, 0.25),
+    inset 0 0 60px rgba(0, 240, 255, 0.05);
+  clip-path: polygon(
+    16px 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%,
+    0 16px
+  );
+  animation: ingresso 0.18s ease-out;
+}
+
+/* Righe di scansione che attraversano la finestra */
+.finestra::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 46, 72, 0.12) 50%,
+    transparent 100%
+  );
+  background-size: 100% 220%;
+  animation: scansione 3.5s linear infinite;
+}
+
+.testata {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 46, 72, 0.25);
+}
+
+.spia {
+  width: 9px;
+  height: 9px;
+  background: var(--cp-rosso);
+  box-shadow: 0 0 10px var(--cp-rosso);
+  animation: cp-sfarfallio 1.4s steps(1, end) infinite;
+}
+
+.titolo {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cp-rosso);
+  text-shadow: 0 0 10px rgba(255, 46, 72, 0.6);
+}
+
+.domanda {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--cp-testo);
+}
+
+.azioni {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@keyframes comparsa {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ingresso {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+  }
+}
+
+@keyframes scansione {
+  from {
+    background-position: 0 -220%;
+  }
+  to {
+    background-position: 0 220%;
+  }
+}

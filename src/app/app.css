@@ -1,0 +1,193 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Barra superiore
+   --------------------------------------------------------------------------- */
+
+.barra-alta {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  padding: 10px 20px;
+  background: linear-gradient(180deg, #101722 0%, #0a0e15 100%);
+  border-bottom: 1px solid var(--cp-bordo);
+  box-shadow:
+    0 1px 0 rgba(0, 240, 255, 0.25),
+    0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Filo giallo che scorre sotto la barra */
+.barra-alta::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 180px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cp-giallo), transparent);
+  animation: scorrimento 6s linear infinite;
+}
+
+.marchio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cp-testo);
+  text-decoration: none;
+  animation: cp-glitch 9s steps(1, end) infinite;
+}
+
+.marchio .glifo {
+  font-size: 15px;
+  color: var(--cp-giallo);
+  text-shadow: 0 0 10px var(--cp-giallo);
+}
+
+.marchio-accento {
+  padding: 1px 7px;
+  color: var(--cp-nero);
+  background: var(--cp-giallo);
+  box-shadow: 0 0 16px rgba(252, 238, 10, 0.55);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.voci {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.voce {
+  display: inline-block;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cp-testo-debole);
+  text-decoration: none;
+  border: 1px solid transparent;
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.voce:hover {
+  color: var(--cp-ciano);
+  border-color: var(--cp-bordo);
+  background: rgba(0, 240, 255, 0.06);
+}
+
+.voce.attiva {
+  color: var(--cp-nero);
+  background: var(--cp-ciano);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.5);
+}
+
+.sottotitolo {
+  margin-left: auto;
+  font-family: var(--cp-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--cp-testo-debole);
+}
+
+.stato {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px;
+  font-family: var(--cp-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cp-verde);
+  border: 1px solid rgba(57, 255, 136, 0.35);
+  background: rgba(57, 255, 136, 0.07);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.spia {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: cp-sfarfallio 2s steps(1, end) infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Avviso temporaneo
+   --------------------------------------------------------------------------- */
+
+/*
+ * L'avviso sta in alto a destra: in basso finirebbe sopra la barra degli
+ * strumenti, che chiude la pagina.
+ */
+.avviso {
+  position: fixed;
+  top: 68px;
+  right: 22px;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(380px, calc(100vw - 44px));
+  padding: 11px 16px;
+  font-size: 13px;
+  color: var(--cp-nero);
+  background: var(--cp-ciano);
+  box-shadow:
+    0 0 22px rgba(0, 240, 255, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+  clip-path: polygon(11px 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%, 0 11px);
+  animation: avviso-ingresso 0.22s ease-out;
+}
+
+@keyframes scorrimento {
+  from {
+    transform: translateX(-200px);
+  }
+  to {
+    transform: translateX(calc(100vw + 200px));
+  }
+}
+
+@keyframes avviso-ingresso {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
+
+/* Su schermi stretti la barra superiore resta su una riga sola */
+@media (max-width: 720px) {
+  .sottotitolo,
+  .stato {
+    display: none;
+  }
+
+  .barra-alta {
+    padding: 9px 14px;
+  }
+
+  .avviso {
+    top: 62px;
+    right: 14px;
+  }
+}

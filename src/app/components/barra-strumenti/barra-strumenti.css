@@ -1,0 +1,127 @@
+:host {
+  position: relative;
+  z-index: 20;
+  display: block;
+  background: linear-gradient(180deg, #0a0e15 0%, #111825 100%);
+  border-top: 1px solid var(--cp-bordo);
+  box-shadow:
+    0 -1px 0 rgba(0, 240, 255, 0.28),
+    0 -14px 36px rgba(0, 0, 0, 0.65);
+}
+
+/* Filo giallo che scorre lungo il bordo superiore della barra */
+:host::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 180px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cp-giallo), transparent);
+  animation: scorrimento-barra 7s linear infinite;
+}
+
+.barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  padding: 9px 20px;
+}
+
+.gruppo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gruppo-destra {
+  margin-left: auto;
+}
+
+.titolo-gruppo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 2px;
+  font-family: var(--cp-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cp-testo-debole);
+}
+
+.titolo-gruppo::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--cp-ciano);
+  box-shadow: 0 0 7px var(--cp-ciano);
+}
+
+.segmento {
+  display: flex;
+  gap: 6px;
+}
+
+/* I pulsanti di aggiunta ereditano il colore della tipologia di dispositivo */
+.pulsante-aggiungi {
+  --accento: var(--colore-tipo, var(--cp-ciano));
+
+  cursor: grab;
+}
+
+.pulsante-aggiungi:active {
+  cursor: grabbing;
+}
+
+.pulsante-aggiungi app-icona-dispositivo {
+  --dimensione-icona: 15px;
+}
+
+/* La percentuale di zoom è una lettura numerica: niente maiuscole */
+.lettura {
+  min-width: 68px;
+  font-family: var(--cp-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* L'etichetta con l'input file nascosto si comporta come un pulsante */
+.importa {
+  cursor: pointer;
+}
+
+.separatore {
+  width: 1px;
+  height: 26px;
+  margin: 0 6px;
+  background: linear-gradient(180deg, transparent, var(--cp-bordo-forte), transparent);
+}
+
+@keyframes scorrimento-barra {
+  from {
+    transform: translateX(-200px);
+  }
+  to {
+    transform: translateX(calc(100vw + 200px));
+  }
+}
+
+/*
+ * Su schermi stretti la barra va a capo: le si mette un tetto di altezza,
+ * così il canvas resta comunque utilizzabile.
+ */
+@media (max-width: 720px) {
+  .barra {
+    gap: 8px 14px;
+    max-height: 46vh;
+    padding: 8px 14px;
+    overflow-y: auto;
+  }
+
+  .gruppo-destra {
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,300 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.contenitore {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Area del canvas
+   --------------------------------------------------------------------------- */
+
+.area-canvas {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+
+  /*
+   * Griglia di sfondo a due livelli (fitta e larga): segue pan e zoom per dare
+   * l'idea di un piano infinito, come il reticolo di una mappa tattica.
+   * Ordine dei livelli: griglia fitta orizzontale, verticale, poi quella larga.
+   */
+  background-color: #06080d;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(0, 240, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.16) 1px, transparent 1px);
+}
+
+/* Alone luminoso al centro dell'area di lavoro */
+.area-canvas::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, rgba(0, 240, 255, 0.07), transparent 62%);
+}
+
+.area-canvas:active {
+  cursor: grabbing;
+}
+
+.area-canvas.modalita-connect {
+  cursor: crosshair;
+
+  background-image:
+    linear-gradient(rgba(255, 166, 43, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 166, 43, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(255, 166, 43, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 166, 43, 0.18) 1px, transparent 1px);
+}
+
+/* Il piano su cui vivono dispositivi e collegamenti */
+.mondo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.collegamenti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Cavo di collegamento: linea tenue sotto il tratteggio luminoso */
+.linea-collegamento {
+  stroke: rgba(0, 240, 255, 0.35);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Tratteggio animato: suggerisce il passaggio dei dati sul cavo */
+.linea-flusso {
+  stroke: var(--cp-ciano);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 7 14;
+  filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.9));
+  animation: flusso-dati 1.1s linear infinite;
+}
+
+.linea-click {
+  stroke: transparent;
+  stroke-width: 14;
+  cursor: pointer;
+  pointer-events: stroke;
+}
+
+/* Il passaggio del mouse sulla linea cliccabile evidenzia il collegamento */
+g:hover .linea-collegamento {
+  stroke: var(--cp-rosso);
+  stroke-width: 3;
+}
+
+g:hover .linea-flusso {
+  stroke: var(--cp-rosso);
+  filter: drop-shadow(0 0 6px rgba(255, 46, 72, 0.95));
+}
+
+/* ---------------------------------------------------------------------------
+   Dispositivi
+   --------------------------------------------------------------------------- */
+
+.dispositivo {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100px;
+  height: 90px;
+  padding: 8px 4px 4px;
+  color: var(--cp-testo);
+  background: linear-gradient(160deg, #141d29 0%, #0a0f16 100%);
+  border: 1px solid var(--colore-tipo, var(--cp-ciano));
+  box-shadow: inset 0 0 24px
+    color-mix(in srgb, var(--colore-tipo, var(--cp-ciano)) 16%, transparent);
+  clip-path: polygon(
+    13px 0,
+    100% 0,
+    100% calc(100% - 13px),
+    calc(100% - 13px) 100%,
+    0 100%,
+    0 13px
+  );
+  filter: drop-shadow(
+    0 0 7px color-mix(in srgb, var(--colore-tipo, var(--cp-ciano)) 42%, transparent)
+  );
+  user-select: none;
+  cursor: grab;
+
+  --dimensione-icona: 28px;
+}
+
+.dispositivo app-icona-dispositivo {
+  color: var(--colore-tipo, var(--cp-ciano));
+  filter: drop-shadow(
+    0 0 6px color-mix(in srgb, var(--colore-tipo, var(--cp-ciano)) 75%, transparent)
+  );
+}
+
+/* Spia di stato del dispositivo, in alto a destra */
+.spia-stato {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  background: var(--luce, var(--cp-verde));
+  box-shadow: 0 0 8px var(--luce, var(--cp-verde));
+  animation: cp-sfarfallio 2.4s steps(1, end) infinite;
+}
+
+.spia-stato.online {
+  --luce: var(--cp-verde);
+}
+
+.spia-stato.offline {
+  --luce: var(--cp-rosso);
+}
+
+.spia-stato.manutenzione {
+  --luce: var(--cp-arancio);
+}
+
+.dispositivo .etichetta {
+  max-width: 88px;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  color: var(--colore-tipo, var(--cp-ciano));
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dispositivo .indirizzo {
+  font-family: var(--cp-mono);
+  font-size: 10px;
+  line-height: 1.1;
+  color: var(--cp-testo-debole);
+}
+
+/* Dispositivo selezionato: bersaglio giallo pulsante */
+.dispositivo.selezionato {
+  border-color: var(--cp-giallo);
+  filter: drop-shadow(0 0 14px rgba(252, 238, 10, 0.85));
+  animation: pulsazione-selezione 1.6s ease-in-out infinite;
+}
+
+.dispositivo.selezionato::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(252, 238, 10, 0.65);
+  pointer-events: none;
+}
+
+.modalita-connect .dispositivo {
+  cursor: crosshair;
+}
+
+.modalita-connect .dispositivo.selezionato {
+  border-color: var(--cp-arancio);
+  filter: drop-shadow(0 0 14px rgba(255, 166, 43, 0.9));
+}
+
+.modalita-connect .dispositivo.selezionato::after {
+  border-color: rgba(255, 166, 43, 0.75);
+}
+
+/* ---------------------------------------------------------------------------
+   Messaggi e barra di stato
+   --------------------------------------------------------------------------- */
+
+.canvas-vuoto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  color: var(--cp-testo-debole);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.canvas-vuoto .titolo {
+  margin-bottom: 6px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: rgba(0, 240, 255, 0.5);
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(0, 240, 255, 0.5);
+}
+
+.canvas-vuoto .testo {
+  margin-bottom: 0;
+  font-family: var(--cp-mono);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.barra-stato {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 5px 20px;
+  font-family: var(--cp-mono);
+  font-size: 11px;
+  color: var(--cp-testo-debole);
+  background: #04060b;
+  border-top: 1px solid rgba(0, 240, 255, 0.14);
+}
+
+.barra-stato .suggerimento::before {
+  content: '› ';
+  color: var(--cp-giallo);
+}
+
+.barra-stato .contatori {
+  color: var(--cp-ciano);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Animazioni
+   --------------------------------------------------------------------------- */
+
+@keyframes flusso-dati {
+  to {
+    stroke-dashoffset: -21;
+  }
+}
+
+@keyframes pulsazione-selezione {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}

@@ -1,0 +1,232 @@
+:host {
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.contenuto {
+  max-width: 760px;
+  padding: 26px 20px 40px;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Percorso di navigazione
+   --------------------------------------------------------------------------- */
+
+.percorso {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+  font-family: var(--cp-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.percorso a {
+  color: var(--cp-ciano);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.percorso a:hover {
+  color: var(--cp-giallo);
+  border-bottom-color: var(--cp-giallo);
+}
+
+.percorso .glifo {
+  color: var(--cp-testo-debole);
+}
+
+.percorso .attivo {
+  color: var(--cp-testo-debole);
+}
+
+/* ---------------------------------------------------------------------------
+   Scheda del dispositivo
+   --------------------------------------------------------------------------- */
+
+.scheda {
+  background: linear-gradient(180deg, #0e141d 0%, #090d14 100%);
+  border: 1px solid var(--cp-bordo);
+  box-shadow:
+    0 0 40px rgba(0, 240, 255, 0.08),
+    0 18px 44px rgba(0, 0, 0, 0.6);
+  clip-path: polygon(
+    18px 0,
+    100% 0,
+    100% calc(100% - 18px),
+    calc(100% - 18px) 100%,
+    0 100%,
+    0 18px
+  );
+}
+
+.testata {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.09), transparent);
+  border-bottom: 1px solid var(--cp-bordo);
+
+  --dimensione-icona: 24px;
+}
+
+.testata app-icona-dispositivo {
+  filter: drop-shadow(0 0 7px currentColor);
+}
+
+.testata .titolo {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cp-testo);
+}
+
+.targhette {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Tabella dei dati
+   --------------------------------------------------------------------------- */
+
+.dati {
+  display: grid;
+  gap: 0;
+  padding: 8px 18px;
+  margin: 0;
+}
+
+.dati .riga {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px dashed rgba(0, 240, 255, 0.14);
+}
+
+.dati dt {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cp-testo-debole);
+}
+
+.dati dd {
+  margin: 0;
+  font-family: var(--cp-mono);
+  font-size: 13px;
+  color: var(--cp-ciano);
+}
+
+/* ---------------------------------------------------------------------------
+   Connessioni
+   --------------------------------------------------------------------------- */
+
+.cp-sezione {
+  margin-right: 18px;
+  margin-left: 18px;
+}
+
+.elenco {
+  margin: 0;
+  padding: 0 18px;
+  list-style: none;
+}
+
+.elenco li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.09);
+
+  --dimensione-icona: 18px;
+}
+
+.elenco app-icona-dispositivo {
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+.elenco a {
+  font-size: 13px;
+  color: var(--cp-testo);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.elenco a:hover {
+  color: var(--cp-giallo);
+}
+
+.elenco .indirizzo {
+  margin-left: auto;
+  font-family: var(--cp-mono);
+  font-size: 12px;
+  color: var(--cp-testo-debole);
+}
+
+.elenco .vuoto {
+  font-size: 12px;
+  color: var(--cp-testo-debole);
+}
+
+.piega {
+  padding: 16px 18px 18px;
+}
+
+.piega .cp-btn {
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Dispositivo non trovato
+   --------------------------------------------------------------------------- */
+
+.avviso {
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  background: rgba(255, 166, 43, 0.08);
+  border: 1px solid rgba(255, 166, 43, 0.45);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+}
+
+.avviso .titolo {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cp-arancio);
+}
+
+.avviso p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--cp-testo);
+}
+
+@media (max-width: 560px) {
+  .dati .riga {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+}

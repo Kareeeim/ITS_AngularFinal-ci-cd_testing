@@ -1,0 +1,105 @@
+@if (dispositivo; as corrente) {
+  <div class="contenuto">
+    <nav class="percorso" aria-label="Percorso di navigazione">
+      <a [routerLink]="['/canvas']">Canvas</a>
+      <span class="glifo">/</span>
+      <span class="attivo" aria-current="page">{{ corrente.nome }}</span>
+    </nav>
+
+    <article class="scheda">
+      <header class="testata">
+        <app-icona-dispositivo
+          [tipo]="corrente.tipo"
+          [class.tipo-pc]="corrente.tipo === 'PC'"
+          [class.tipo-switch]="corrente.tipo === 'Switch'"
+          [class.tipo-router]="corrente.tipo === 'Router'"
+        />
+
+        <span class="titolo">Dettaglio dispositivo</span>
+
+        <span class="targhette">
+          <span
+            class="cp-badge"
+            [class.online]="corrente.stato === 'Online'"
+            [class.offline]="corrente.stato === 'Offline'"
+            [class.manutenzione]="corrente.stato === 'Manutenzione'"
+          >
+            {{ corrente.stato }}
+          </span>
+          <span
+            class="cp-badge tipo"
+            [class.tipo-pc]="corrente.tipo === 'PC'"
+            [class.tipo-switch]="corrente.tipo === 'Switch'"
+            [class.tipo-router]="corrente.tipo === 'Router'"
+          >
+            {{ corrente.tipo }}
+          </span>
+        </span>
+      </header>
+
+      <dl class="dati">
+        <div class="riga">
+          <dt>Nome</dt>
+          <dd>{{ corrente.nome }}</dd>
+        </div>
+        <div class="riga">
+          <dt>Tipo</dt>
+          <dd>{{ corrente.tipo }}</dd>
+        </div>
+        <div class="riga">
+          <dt>Indirizzo IP</dt>
+          <dd>{{ corrente.ip }}</dd>
+        </div>
+        <div class="riga">
+          <dt>Hostname</dt>
+          <dd>{{ corrente.hostname }}</dd>
+        </div>
+        <div class="riga">
+          <dt>Posizione</dt>
+          <dd>x: {{ corrente.x }} &middot; y: {{ corrente.y }}</dd>
+        </div>
+        <div class="riga">
+          <dt>Identificativo</dt>
+          <dd>{{ corrente.id }}</dd>
+        </div>
+      </dl>
+
+      <h6 class="cp-sezione">
+        Connessioni
+        <span class="cp-badge">{{ collegamenti.length }}</span>
+      </h6>
+
+      <ul class="elenco">
+        @for (collegamento of collegamenti; track collegamento.connessione.id) {
+          <li>
+            <app-icona-dispositivo
+              [tipo]="collegamento.dispositivo.tipo"
+              [class.tipo-pc]="collegamento.dispositivo.tipo === 'PC'"
+              [class.tipo-switch]="collegamento.dispositivo.tipo === 'Switch'"
+              [class.tipo-router]="collegamento.dispositivo.tipo === 'Router'"
+            />
+            <a [routerLink]="['/dispositivo', collegamento.dispositivo.id]">
+              {{ collegamento.dispositivo.nome }}
+            </a>
+            <span class="indirizzo">{{ collegamento.dispositivo.ip }}</span>
+          </li>
+        } @empty {
+          <li class="vuoto">Nessuna connessione presente.</li>
+        }
+      </ul>
+
+      <footer class="piega">
+        <a class="cp-btn" [routerLink]="['/canvas']">Torna al canvas</a>
+      </footer>
+    </article>
+  </div>
+} @else {
+  <div class="contenuto">
+    <div class="avviso" role="alert">
+      <span class="titolo">Dispositivo non trovato</span>
+      <p>Potrebbe essere stato eliminato dalla topologia.</p>
+    </div>
+
+    <a class="cp-btn" [routerLink]="['/canvas']">Torna al canvas</a>
+  </div>
+}

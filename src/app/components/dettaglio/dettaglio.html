@@ -1,0 +1,126 @@
+@if (dispositivo(); as corrente) {
+  <aside class="pannello">
+    <header class="intestazione">
+      <div class="identita">
+        <app-icona-dispositivo
+          [tipo]="corrente.tipo"
+          [class.tipo-pc]="corrente.tipo === 'PC'"
+          [class.tipo-switch]="corrente.tipo === 'Switch'"
+          [class.tipo-router]="corrente.tipo === 'Router'"
+        />
+
+        <div class="testi">
+          <div class="nome">{{ corrente.nome }}</div>
+
+          <div class="targhette">
+            <span
+              class="cp-badge tipo"
+              [class.tipo-pc]="corrente.tipo === 'PC'"
+              [class.tipo-switch]="corrente.tipo === 'Switch'"
+              [class.tipo-router]="corrente.tipo === 'Router'"
+            >
+              {{ corrente.tipo }}
+            </span>
+            <span
+              class="cp-badge"
+              [class.online]="corrente.stato === 'Online'"
+              [class.offline]="corrente.stato === 'Offline'"
+              [class.manutenzione]="corrente.stato === 'Manutenzione'"
+            >
+              {{ corrente.stato }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="chiudi" aria-label="Chiudi" (click)="chiudi()">&times;</button>
+    </header>
+
+    <div class="corpo">
+      <h6 class="cp-sezione">Informazioni</h6>
+
+      <div class="campo">
+        <label class="cp-etichetta" for="campo-nome">Nome</label>
+        <input id="campo-nome" type="text" class="cp-campo" [(ngModel)]="nome" />
+      </div>
+
+      <div class="campo">
+        <label class="cp-etichetta" for="campo-tipo">Tipo</label>
+        <input id="campo-tipo" type="text" class="cp-campo" [value]="corrente.tipo" disabled />
+      </div>
+
+      <div class="campo">
+        <label class="cp-etichetta" for="campo-ip">Indirizzo IP</label>
+        <input id="campo-ip" type="text" class="cp-campo" [(ngModel)]="ip" />
+      </div>
+
+      <div class="campo">
+        <label class="cp-etichetta" for="campo-hostname">Hostname</label>
+        <input id="campo-hostname" type="text" class="cp-campo" [(ngModel)]="hostname" />
+      </div>
+
+      <div class="campo">
+        <label class="cp-etichetta" for="campo-stato">Stato</label>
+        <select id="campo-stato" class="cp-campo" [(ngModel)]="stato">
+          @for (valore of stati; track valore) {
+            <option [ngValue]="valore">{{ valore }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="riga-riepilogo">
+        <span>ID dispositivo</span>
+        <strong>{{ corrente.id }}</strong>
+      </div>
+
+      <div class="riga-riepilogo">
+        <span>Posizione sul canvas</span>
+        <strong>x: {{ corrente.x }} &middot; y: {{ corrente.y }}</strong>
+      </div>
+
+      <h6 class="cp-sezione">
+        Connessioni
+        <span class="cp-badge">{{ collegamenti().length }}</span>
+      </h6>
+
+      @if (collegamenti().length === 0) {
+        <p class="testo-vuoto">
+          Nessuna connessione. Passa alla modalità Connect per collegare questo dispositivo.
+        </p>
+      } @else {
+        <ul class="elenco-collegamenti">
+          @for (collegamento of collegamenti(); track collegamento.connessione.id) {
+            <li>
+              <app-icona-dispositivo
+                [tipo]="collegamento.dispositivo.tipo"
+                [class.tipo-pc]="collegamento.dispositivo.tipo === 'PC'"
+                [class.tipo-switch]="collegamento.dispositivo.tipo === 'Switch'"
+                [class.tipo-router]="collegamento.dispositivo.tipo === 'Router'"
+              />
+              <span class="nome-collegato">{{ collegamento.dispositivo.nome }}</span>
+              <button
+                type="button"
+                class="cp-btn pericolo taglia"
+                title="Elimina la connessione"
+                (click)="eliminaConnessione(collegamento.connessione.id ?? 0)"
+              >
+                &times;
+              </button>
+            </li>
+          }
+        </ul>
+      }
+
+      <h6 class="cp-sezione">Azioni</h6>
+
+      <div class="azioni">
+        <a class="cp-btn" [routerLink]="['/dispositivo', corrente.id]">
+          Apri la pagina di dettaglio
+        </a>
+        <button type="button" class="cp-btn pericolo" (click)="eliminaDispositivo()">
+          Elimina dispositivo
+        </button>
+      </div>
+    </div>
+  </aside>
+}

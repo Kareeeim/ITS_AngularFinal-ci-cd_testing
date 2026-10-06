@@ -1,0 +1,184 @@
+:host {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: 340px;
+}
+
+.pannello {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, #0e141d 0%, #090d14 100%);
+  border-left: 1px solid var(--cp-bordo-forte);
+  box-shadow:
+    -1px 0 0 rgba(0, 240, 255, 0.2),
+    -18px 0 44px rgba(0, 0, 0, 0.7);
+  animation: apertura-pannello 0.2s ease-out;
+}
+
+.intestazione {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.08), transparent);
+  border-bottom: 1px solid var(--cp-bordo);
+
+  --dimensione-icona: 30px;
+}
+
+.identita {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.identita app-icona-dispositivo {
+  filter: drop-shadow(0 0 7px currentColor);
+}
+
+.testi {
+  min-width: 0;
+}
+
+.identita .nome {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  color: var(--cp-testo);
+  text-transform: uppercase;
+}
+
+.targhette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.chiudi {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--cp-testo-debole);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--cp-bordo);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.chiudi:hover {
+  color: var(--cp-nero);
+  background: var(--cp-rosso);
+  border-color: var(--cp-rosso);
+}
+
+.corpo {
+  flex: 1;
+  padding: 16px 16px 22px;
+  overflow-y: auto;
+}
+
+.campo {
+  margin-bottom: 10px;
+}
+
+.riga-riepilogo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 12px;
+  color: var(--cp-testo-debole);
+  border-bottom: 1px dashed rgba(0, 240, 255, 0.14);
+}
+
+.riga-riepilogo strong {
+  font-family: var(--cp-mono);
+  font-weight: 400;
+  color: var(--cp-ciano);
+}
+
+.elenco-collegamenti {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.elenco-collegamenti li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.09);
+
+  --dimensione-icona: 18px;
+}
+
+.elenco-collegamenti app-icona-dispositivo {
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+.elenco-collegamenti .nome-collegato {
+  flex: 1;
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Pulsante quadrato per eliminare una singola connessione */
+.taglia {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.testo-vuoto {
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--cp-testo-debole);
+}
+
+.azioni {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.azioni .cp-btn {
+  justify-content: center;
+  text-decoration: none;
+}
+
+@keyframes apertura-pannello {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+
+/* Su schermi stretti il pannello occupa tutta la larghezza disponibile */
+@media (max-width: 520px) {
+  :host {
+    width: 100%;
+  }
+}

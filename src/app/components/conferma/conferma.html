@@ -1,0 +1,27 @@
+@if (service.richiestaConferma(); as domanda) {
+  <div class="velo" (click)="rispondi(false)">
+    <div
+      class="finestra"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="titolo-conferma"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="testata">
+        <span class="spia"></span>
+        <span id="titolo-conferma" class="titolo">Conferma richiesta</span>
+      </div>
+
+      <p class="domanda">{{ domanda }}</p>
+
+      <div class="azioni">
+        <button type="button" class="cp-btn neutro" autofocus (click)="rispondi(false)">
+          Annulla
+        </button>
+        <button type="button" class="cp-btn pericolo pieno" (click)="rispondi(true)">
+          Conferma
+        </button>
+      </div>
+    </div>
+  </div>
+}

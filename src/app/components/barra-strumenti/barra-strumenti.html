@@ -1,0 +1,90 @@
+<div class="barra">
+  <div class="gruppo">
+    <span class="titolo-gruppo">Aggiungi</span>
+
+    @for (tipo of tipi; track tipo) {
+      <button
+        type="button"
+        class="cp-btn pulsante-aggiungi"
+        [class.tipo-pc]="tipo === 'PC'"
+        [class.tipo-switch]="tipo === 'Switch'"
+        [class.tipo-router]="tipo === 'Router'"
+        draggable="true"
+        [title]="'Aggiungi un dispositivo ' + tipo + ' (oppure trascinalo sul canvas)'"
+        (dragstart)="iniziaTrascinamento($event, tipo)"
+        (click)="aggiungi(tipo)"
+      >
+        <app-icona-dispositivo [tipo]="tipo" />
+        {{ tipo }}
+      </button>
+    }
+  </div>
+
+  <div class="gruppo">
+    <span class="titolo-gruppo">Modalità</span>
+
+    <div class="segmento">
+      <button
+        type="button"
+        class="cp-btn"
+        [class.attivo]="service.modalita() === 'edit'"
+        title="Sposta i dispositivi trascinandoli"
+        (click)="service.impostaModalita('edit')"
+      >
+        Edit
+      </button>
+      <button
+        type="button"
+        class="cp-btn avviso"
+        [class.attivo]="service.modalita() === 'connect'"
+        title="Collega due dispositivi con due click"
+        (click)="service.impostaModalita('connect')"
+      >
+        Connect
+      </button>
+    </div>
+  </div>
+
+  <div class="gruppo">
+    <span class="titolo-gruppo">Zoom</span>
+
+    <div class="segmento">
+      <button type="button" class="cp-btn neutro" title="Riduci lo zoom" (click)="service.zoomIndietro()">
+        &minus;
+      </button>
+      <button
+        type="button"
+        class="cp-btn neutro lettura"
+        title="Reimposta la vista del canvas"
+        (click)="service.reimpostaVista()"
+      >
+        {{ percentualeZoom() }}%
+      </button>
+      <button type="button" class="cp-btn neutro" title="Aumenta lo zoom" (click)="service.zoomAvanti()">
+        &plus;
+      </button>
+    </div>
+  </div>
+
+  <div class="gruppo gruppo-destra">
+    <span class="titolo-gruppo">Topologia</span>
+
+    @if (service.esisteSalvataggio()) {
+      <span class="cp-badge online">salvata</span>
+    }
+
+    <button type="button" class="cp-btn successo" (click)="service.salvaTopologia()">
+      Salva
+    </button>
+    <button type="button" class="cp-btn" (click)="service.caricaTopologia()">Carica</button>
+    <button type="button" class="cp-btn pericolo" (click)="cancella()">Cancella</button>
+
+    <span class="separatore"></span>
+
+    <button type="button" class="cp-btn neutro" (click)="esporta()">Esporta JSON</button>
+    <label class="cp-btn neutro importa">
+      Importa JSON
+      <input type="file" accept=".json,application/json" hidden (change)="importa($event)" />
+    </label>
+  </div>
+</div>

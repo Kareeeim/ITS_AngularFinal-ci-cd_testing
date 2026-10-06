@@ -1,0 +1,106 @@
+<div class="contenitore">
+  <div
+    class="area-canvas"
+    [class.modalita-connect]="service.modalita() === 'connect'"
+    [style.background-size]="dimensioneGriglia()"
+    [style.background-position]="posizioneGriglia()"
+    (pointerdown)="iniziaPanoramica($event)"
+    (wheel)="gestisciZoom($event)"
+    (dragover)="consentiRilascio($event)"
+    (drop)="rilasciaDispositivo($event)"
+    (contextmenu)="$event.preventDefault()"
+  >
+    <div
+      class="mondo"
+      [style.width.px]="larghezzaMondo"
+      [style.height.px]="altezzaMondo"
+      [style.transform]="trasformazioneMondo()"
+    >
+      <!-- Collegamenti: si aggiornano automaticamente quando i dispositivi si spostano -->
+      <svg class="collegamenti" [attr.width]="larghezzaMondo" [attr.height]="altezzaMondo">
+        @for (linea of linee(); track linea.id) {
+          <g>
+            <line
+              class="linea-collegamento"
+              [attr.x1]="linea.x1"
+              [attr.y1]="linea.y1"
+              [attr.x2]="linea.x2"
+              [attr.y2]="linea.y2"
+            />
+            <!-- Tratteggio animato: suggerisce il passaggio dei dati sul cavo -->
+            <line
+              class="linea-flusso"
+              [attr.x1]="linea.x1"
+              [attr.y1]="linea.y1"
+              [attr.x2]="linea.x2"
+              [attr.y2]="linea.y2"
+            />
+            <!-- Linea invisibile più spessa: rende più facile cliccare il collegamento -->
+            <line
+              class="linea-click"
+              [attr.x1]="linea.x1"
+              [attr.y1]="linea.y1"
+              [attr.x2]="linea.x2"
+              [attr.y2]="linea.y2"
+              (click)="eliminaConnessione(linea.id); $event.stopPropagation()"
+            />
+          </g>
+        }
+      </svg>
+
+      <!-- Dispositivi posizionati nel sistema di coordinate del canvas -->
+      @for (dispositivo of service.dispositivi(); track dispositivo.id) {
+        <div
+          class="dispositivo"
+          [class.tipo-pc]="dispositivo.tipo === 'PC'"
+          [class.tipo-switch]="dispositivo.tipo === 'Switch'"
+          [class.tipo-router]="dispositivo.tipo === 'Router'"
+          [class.selezionato]="service.idSelezionato() === dispositivo.id"
+          [style.left.px]="dispositivo.x"
+          [style.top.px]="dispositivo.y"
+          (pointerdown)="iniziaTrascinamento($event, dispositivo)"
+          (click)="selezionaDispositivo($event, dispositivo)"
+          (contextmenu)="apriDettaglio($event, dispositivo)"
+        >
+          <span
+            class="spia-stato"
+            [class.online]="dispositivo.stato === 'Online'"
+            [class.offline]="dispositivo.stato === 'Offline'"
+            [class.manutenzione]="dispositivo.stato === 'Manutenzione'"
+            [title]="'Stato: ' + dispositivo.stato"
+          ></span>
+
+          <app-icona-dispositivo [tipo]="dispositivo.tipo" />
+
+          <span class="etichetta">{{ dispositivo.nome }}</span>
+          <span class="indirizzo">{{ dispositivo.ip }}</span>
+        </div>
+      }
+    </div>
+
+    @if (service.dispositivi().length === 0) {
+      <div class="canvas-vuoto">
+        <p class="titolo">Packet Tracer 2077 vuoto</p>
+        <p class="testo">
+          Aggiungi un dispositivo con i pulsanti della barra in basso,<br />
+          oppure trascinalo direttamente su questa area.
+        </p>
+      </div>
+    }
+  </div>
+
+  @if (service.idDettaglio() !== null) {
+    <app-dettaglio />
+  }
+</div>
+
+<!-- La barra degli strumenti chiude la pagina, come l'HUD di un terminale -->
+<app-barra-strumenti />
+
+<div class="barra-stato">
+  <span class="suggerimento">{{ suggerimento() }}</span>
+  <span class="contatori">
+    {{ service.dispositivi().length }} dispositivi &middot; {{ service.connessioni().length }}
+    connessioni
+  </span>
+</div>
